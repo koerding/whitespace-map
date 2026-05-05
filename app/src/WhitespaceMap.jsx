@@ -352,13 +352,6 @@ export default function WhitespaceMap({
         setSelected={setSelected}
       />
 
-      {selected !== null && (
-        <PaperDetails
-          paper={corpus.paperMeta[selected]}
-          onClose={() => setSelected(null)}
-        />
-      )}
-
       <div style={{ ...TEXT.caption, marginTop: 12, color: NEUTRAL.midGray, fontStyle: 'italic' }}>
         Gold dots are the papers most similar to your text in the original (high-dimensional) space — the true nearest neighbors. Their lines to the flag are often long: UMAP preserves local neighborhoods but not global distances, and you cannot project high-D data into 2-D without losing information. Worth remembering whenever you read a UMAP or t-SNE map.
       </div>
@@ -378,6 +371,7 @@ function ScatterPlot({ corpus, scales, width, height, flagPos, nearestIndices, f
       <svg
         width={width}
         height={height}
+        onClick={(e) => { if (e.target.tagName === 'svg') setSelected(null); }}
         style={{
           backgroundColor: NEUTRAL.white,
           borderRadius: BORDER_RADIUS,
@@ -483,12 +477,23 @@ function ScatterPlot({ corpus, scales, width, height, flagPos, nearestIndices, f
         </g>
       </svg>
 
-      {hovered !== null && (
+      {hovered !== null && hovered !== selected && (
         <HoverTitle
           title={corpus.paperMeta[hovered].title}
           x={sx(corpus.paperCoords[hovered][0])}
           y={sy(corpus.paperCoords[hovered][1])}
           containerWidth={width}
+        />
+      )}
+
+      {selected !== null && (
+        <PaperPopup
+          paper={corpus.paperMeta[selected]}
+          x={sx(corpus.paperCoords[selected][0])}
+          y={sy(corpus.paperCoords[selected][1])}
+          containerWidth={width}
+          containerHeight={height}
+          onClose={() => setSelected(null)}
         />
       )}
     </div>
@@ -525,42 +530,56 @@ function HoverTitle({ title, x, y, containerWidth }) {
   );
 }
 
-function PaperDetails({ paper, onClose }) {
+function PaperPopup({ paper, x, y, containerWidth, containerHeight, onClose }) {
+  const w = 440;
+  const estLines = Math.ceil((paper.abstract?.length || 0) / 64) + 2;
+  const estHeight = Math.min(540, 110 + estLines * 20);
+  const flipX = x + 18 + w > containerWidth;
+  const flipY = y + 18 + estHeight > containerHeight;
+  const left = flipX ? Math.max(8, x - w - 14) : x + 14;
+  const top  = flipY ? Math.max(-30, y - estHeight) : y + 14;
   return (
-    <div style={{
-      marginTop: 14,
-      backgroundColor: NEUTRAL.white,
-      border: `1px solid ${NEUTRAL.intLightGray}`,
-      borderRadius: BORDER_RADIUS,
-      padding: 16,
-      boxShadow: '0 1px 3px rgba(0,0,0,0.06)',
-      position: 'relative'
-    }}>
+    <div
+      onClick={(e) => e.stopPropagation()}
+      style={{
+        position: 'absolute',
+        left, top,
+        width: w,
+        maxHeight: 540,
+        overflowY: 'auto',
+        backgroundColor: NEUTRAL.white,
+        border: `1px solid ${NEUTRAL.intLightGray}`,
+        borderRadius: BORDER_RADIUS,
+        padding: 16,
+        boxShadow: '0 6px 20px rgba(0,0,0,0.16)',
+        zIndex: 8
+      }}
+    >
       <button
         onClick={onClose}
         aria-label="Close"
         style={{
           position: 'absolute',
-          top: 8, right: 8,
+          top: 6, right: 6,
           width: 28, height: 28,
           borderRadius: '50%',
           border: 'none',
           background: 'transparent',
           cursor: 'pointer',
           color: NEUTRAL.darkGray,
-          fontSize: '1.1rem',
+          fontSize: '1.2rem',
           lineHeight: 1
         }}
       >
         ×
       </button>
-      <div style={{ ...TEXT.heading, fontSize: '1.05rem', marginBottom: 6, paddingRight: 32 }}>
+      <div style={{ ...TEXT.heading, fontSize: '1rem', marginBottom: 6, paddingRight: 28 }}>
         {paper.title}
       </div>
       <div style={{ ...TEXT.caption, marginBottom: 10 }}>
         {paper.year}{paper.authors?.length ? ` · ${paper.authors.slice(0, 4).join(', ')}${paper.authors.length > 4 ? ' et al.' : ''}` : ''}{typeof paper.citationCount === 'number' ? ` · ${paper.citationCount.toLocaleString()} cites` : ''}
       </div>
-      <div style={{ ...TEXT.body, fontSize: '0.95rem', color: NEUTRAL.darkGray, lineHeight: 1.55 }}>
+      <div style={{ ...TEXT.body, fontSize: '0.92rem', color: NEUTRAL.darkGray, lineHeight: 1.55 }}>
         {paper.abstract}
       </div>
     </div>
