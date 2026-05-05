@@ -326,7 +326,7 @@ export default function WhitespaceMap({
     <PageContainer>
       <div ref={wrapperRef}>
       <InstructionCard title="Where does your work live?">
-        Paste an abstract into the box below — ideally one of your own (a paper draft, a grant aim, a project idea). Your flag will move onto a 2-D map of {corpus.paperMeta.length.toLocaleString()} highly-cited neuroscience papers as you type or paste. Hover any dot to see what's there.
+        Paste an abstract into the box below — ideally one of your own (a paper draft, a grant aim, a project idea). Your flag will move onto a 2-D map of {corpus.paperMeta.length.toLocaleString()} highly-cited neuroscience papers as you type or paste. Hover any dot for the paper's title; click for the full abstract and authors.
         <div style={{ ...TEXT.caption, marginTop: 10, color: NEUTRAL.darkGray, fontStyle: 'italic' }}>
           Heads up: to keep this responsive in the browser we use a deliberately simple algorithm (TF-IDF on words, no semantic embeddings). It catches the broad strokes but won't always understand synonyms or paraphrase. Sorry.
         </div>
