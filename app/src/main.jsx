@@ -110,10 +110,13 @@ function Reflection({ value, onChange }) {
     <div style={{ maxWidth: 900, margin: '0 auto', padding: 24 }}>
       <div style={{ ...TEXT.heading, marginBottom: 12 }}>Reflect</div>
       <div style={TEXT.body}>
-        You just saw that the gold dots — the papers actually closest to yours — often sit far from your flag on the map. UMAP and t-SNE don't really preserve the geometry of an intellectual landscape; the whitespace you see in a 2-D projection is partly an artifact of the projection itself.
+        Now step away from the map. The simple word-overlap computation you just played with captures only the surface of what makes research distinctive. Two papers using the same words can be doing very different work. Two using different words can be answering the same question better or worse.
       </div>
       <div style={{ ...TEXT.body, marginTop: 10 }}>
-        Now describe the intellectual landscape <em>your own</em> work lives in. Where does it sit? Which directions does it border? Which gaps around it are real whitespace, and which are just the kind of distortion the map showed you?
+        Forget the algorithm and think about <em>your own</em> project. What is it doing that no one else is doing, or doing differently? Is it asking a question that hasn't been asked, applying a method to a new domain, or challenging an assumption your subfield takes for granted? Or is the contribution incremental — and if so, what specifically does the increment add?
+      </div>
+      <div style={{ ...TEXT.body, marginTop: 10 }}>
+        Write a few sentences on what makes your work genuinely distinct — the things no algorithm operating on your abstract could see.
       </div>
       <textarea
         value={value}
