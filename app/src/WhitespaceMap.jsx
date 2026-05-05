@@ -208,8 +208,6 @@ export default function WhitespaceMap({
   corpus: corpusProp,
   corpusUrl = '/corpus.json',
   onInteract,
-  width = 760,
-  height = 520,
 }) {
   const [corpus, setCorpus] = useState(corpusProp || null);
   const [loadError, setLoadError] = useState(null);
@@ -217,7 +215,24 @@ export default function WhitespaceMap({
   const [hovered, setHovered] = useState(null);
   const [selected, setSelected] = useState(null);
   const [debouncedQuery, setDebouncedQuery] = useState('');
+  const [width, setWidth] = useState(760);
+  const [height, setHeight] = useState(520);
+  const wrapperRef = useRef(null);
   const interactedRef = useRef(false);
+
+  useEffect(() => {
+    if (!wrapperRef.current) return;
+    const update = () => {
+      const w = Math.floor(wrapperRef.current.getBoundingClientRect().width);
+      const clamped = Math.max(320, w);
+      setWidth(clamped);
+      setHeight(Math.round(clamped * 0.62));
+    };
+    update();
+    const ro = new ResizeObserver(update);
+    ro.observe(wrapperRef.current);
+    return () => ro.disconnect();
+  }, [corpus]);
 
   useEffect(() => {
     if (corpusProp) { setCorpus(corpusProp); return; }
@@ -309,6 +324,7 @@ export default function WhitespaceMap({
 
   return (
     <PageContainer>
+      <div ref={wrapperRef}>
       <InstructionCard title="Where does your work live?">
         Paste an abstract into the box below — ideally one of your own (a paper draft, a grant aim, a project idea). Your flag will move onto a 2-D map of {corpus.paperMeta.length.toLocaleString()} highly-cited neuroscience papers as you type or paste. Hover any dot to see what's there.
         <div style={{ ...TEXT.caption, marginTop: 10, color: NEUTRAL.darkGray, fontStyle: 'italic' }}>
@@ -361,6 +377,7 @@ export default function WhitespaceMap({
 
       <div style={{ ...TEXT.caption, marginTop: 12, color: NEUTRAL.midGray, fontStyle: 'italic' }}>
         Gold dots are the papers most similar to your text in the original (high-dimensional) space — the true nearest neighbors. Their lines to the flag are often long: UMAP preserves local neighborhoods but not global distances, and you cannot project high-D data into 2-D without losing information. Worth remembering whenever you read a UMAP or t-SNE map.
+      </div>
       </div>
     </PageContainer>
   );
