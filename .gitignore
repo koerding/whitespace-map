@@ -1,0 +1,18 @@
+node_modules/
+dist/
+.DS_Store
+.vite/
+.vercel/
+
+# OpenAlex fetch intermediate (regenerable via npm run data:fetch)
+cache/
+
+# C4R reference files (kept locally, not published)
+/page.jsx
+/system-prompt_activity-ideation.md
+/activity-description-template.md
+
+# IDE / OS clutter
+.idea/
+.vscode/
+*.log
