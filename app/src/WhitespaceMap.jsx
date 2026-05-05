@@ -234,6 +234,13 @@ export default function WhitespaceMap({
     return () => clearTimeout(id);
   }, [query]);
 
+  useEffect(() => {
+    if (selected === null) return;
+    const onKey = (e) => { if (e.key === 'Escape') setSelected(null); };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [selected]);
+
   const termIndex = useMemo(() => {
     if (!corpus) return null;
     const m = new Map();
