@@ -13,7 +13,7 @@ const ROOT = resolve(__dirname, '..');
 const RAW_PATH = resolve(ROOT, 'cache', 'papers_raw.json');
 const OUT_PATH = resolve(ROOT, 'data', 'corpus.json');
 
-const UMAP_PARAMS = { nNeighbors: 8, minDist: 0.0, nComponents: 2 };
+const UMAP_PARAMS = { nNeighbors: 10, minDist: 0.05, nComponents: 2 };
 const VOCAB_PARAMS = { maxVocab: 3000, minDf: 3, maxDfRatio: 0.5 };
 const DBSCAN_MIN_PTS = 12;
 const LABEL_TERM_COUNT = 3;
