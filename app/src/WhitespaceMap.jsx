@@ -598,7 +598,18 @@ function PaperPopup({ paper, x, y, containerWidth, containerHeight, onClose }) {
         ×
       </button>
       <div style={{ ...TEXT.heading, fontSize: '1rem', marginBottom: 6, paddingRight: 28 }}>
-        {paper.title}
+        {paper.url ? (
+          <a
+            href={paper.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ color: NEUTRAL.black, textDecoration: 'none', borderBottom: `1px solid ${NEUTRAL.intLightGray}` }}
+            onMouseEnter={e => { e.currentTarget.style.color = PRIMARY.purple; e.currentTarget.style.borderBottomColor = PRIMARY.purple; }}
+            onMouseLeave={e => { e.currentTarget.style.color = NEUTRAL.black; e.currentTarget.style.borderBottomColor = NEUTRAL.intLightGray; }}
+          >
+            {paper.title}
+          </a>
+        ) : paper.title}
       </div>
       <div style={{ ...TEXT.caption, marginBottom: 10 }}>
         {paper.year}{paper.authors?.length ? ` · ${paper.authors.slice(0, 4).join(', ')}${paper.authors.length > 4 ? ' et al.' : ''}` : ''}{typeof paper.citationCount === 'number' ? ` · ${paper.citationCount.toLocaleString()} cites` : ''}
@@ -606,6 +617,23 @@ function PaperPopup({ paper, x, y, containerWidth, containerHeight, onClose }) {
       <div style={{ ...TEXT.body, fontSize: '0.92rem', color: NEUTRAL.darkGray, lineHeight: 1.55 }}>
         {paper.abstract}
       </div>
+      {paper.url && (
+        <div style={{ marginTop: 10 }}>
+          <a
+            href={paper.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              fontSize: '0.85rem',
+              color: PRIMARY.purple,
+              textDecoration: 'none',
+              fontWeight: 600
+            }}
+          >
+            Read paper →
+          </a>
+        </div>
+      )}
     </div>
   );
 }

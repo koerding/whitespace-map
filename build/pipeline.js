@@ -186,13 +186,19 @@ function densityGrid(coords, gridSize = 64) {
 }
 
 function summarizePapers(papers) {
-  return papers.map(p => ({
-    title: p.title,
-    year: p.year,
-    authors: p.authors,
-    citationCount: p.citationCount,
-    abstract: p.abstract.length > 1600 ? p.abstract.slice(0, 1600) + '…' : p.abstract
-  }));
+  return papers.map(p => {
+    const url = p.doi
+      ? (p.doi.startsWith('http') ? p.doi : `https://doi.org/${p.doi.replace(/^doi:/, '')}`)
+      : (p.id || null);
+    return {
+      title: p.title,
+      year: p.year,
+      authors: p.authors,
+      citationCount: p.citationCount,
+      url,
+      abstract: p.abstract.length > 1600 ? p.abstract.slice(0, 1600) + '…' : p.abstract
+    };
+  });
 }
 
 async function main() {

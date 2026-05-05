@@ -34,7 +34,7 @@ async function fetchPage(cursor) {
   url.searchParams.set('per_page', String(PER_PAGE));
   url.searchParams.set('cursor', cursor);
   url.searchParams.set('mailto', MAILTO);
-  url.searchParams.set('select', 'id,title,publication_year,cited_by_count,authorships,abstract_inverted_index,primary_topic');
+  url.searchParams.set('select', 'id,doi,title,publication_year,cited_by_count,authorships,abstract_inverted_index,primary_topic');
 
   const res = await fetch(url, {
     headers: {
@@ -84,6 +84,7 @@ async function main() {
       seen.add(w.id);
       papers.push({
         id: w.id,
+        doi: w.doi || null,
         title,
         abstract,
         year: w.publication_year ?? null,
